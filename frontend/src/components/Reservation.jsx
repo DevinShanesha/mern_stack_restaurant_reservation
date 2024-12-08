@@ -1,9 +1,5 @@
 import React from "react";
-import { HiOutlineArrowNarrowRight } from "react-icons/hi";
-import axios from "axios";
 import { useState } from "react";
-import toast from "react-hot-toast";
-import { useNavigate } from "react-router-dom";
 
 const Reservation = () => {
   const [firstName, setFirstName] = useState("");
@@ -12,31 +8,32 @@ const Reservation = () => {
   const [date, setDate] = useState("");
   const [time, setTime] = useState("");
   const [phone, setPhone] = useState(0);
-  const navigate = useNavigate();
 
   const handleReservation = async (e) => {
     e.preventDefault();
     try {
-      const { data } = await axios.post(
-        "http://localhost:3000/reservation/send",
-        { firstName, lastName, email, phone, date, time },
-        {
+        
+      const response = await fetch('http://localhost:3000/api/v1/reservation/send', {
+          method: 'POST',
           headers: {
-            "Content-Type": "application/json",
+            'Content-Type': 'application/json',
           },
-          withCredentials: true,
-        }
-      );
-      toast.success(data.message);
+          body: JSON.stringify({ firstName, lastName, email, date, time, phone })
+      });
+  
+      const data = await response.json()
+
       setFirstName("");
       setLastName("");
       setPhone(0);
       setEmail("");
       setTime("");
       setDate("");
-      navigate("/success");
+      if(response.status == 400){
+        alert(`${data.message}`)
+      }
     } catch (error) {
-      toast.error(error.response.data.message);
+      console.error(error);
     }
   };
 
@@ -95,10 +92,7 @@ const Reservation = () => {
                 />
               </div>
               <button type="submit" onClick={handleReservation}>
-                RESERVE NOW{" "}
-                <span>
-                  <HiOutlineArrowNarrowRight />
-                </span>
+                RESERVE NOW
               </button>
             </form>
           </div>

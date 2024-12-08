@@ -28,10 +28,10 @@ const reservationSchema = new mongoose.Schema({
     validate: [validator.isEmail, "Provide a valid email"],
   },
   phone: {
-    type: String,
+    type: Number,
     required: true,
-    minLength: [11, "Phone number must contain 11 Digits."],
-    maxLength: [11, "Phone number must contain 11 Digits."],
+    minLength: [10, "Phone number must contain 10 Digits."],
+    maxLength: [10, "Phone number must contain 10 Digits."],
   },
 });
 
